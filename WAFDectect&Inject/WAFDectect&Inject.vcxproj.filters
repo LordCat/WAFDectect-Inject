@@ -18,5 +18,13 @@
     <ClCompile Include="WAFDectect&amp;Inject.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="waf_detection.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="waf_detection.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
