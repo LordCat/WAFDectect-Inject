@@ -142,7 +142,7 @@
   "Incapsula Web Application Firewall (Incapsula/Imperva)": {
     "code": "",
     "page": "Incapsula incident ID|_Incapsula_Resource|subject=WAF Block Page|If you feel you have been blocked in error, please contact Customer Support",
-    "headers": "X-Iinfo|incap_ses|visid_incap"
+    "headers": "X-Iinfo|incap_ses|visid_incap|X-Cdn: Imperva"
   },
   "ISA Server (Microsoft)": {
     "code": "",

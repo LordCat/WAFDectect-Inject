@@ -30,7 +30,7 @@ int main(int argc, char* argv[]){
 
     std::cout << "URL: " << url << std::endl;
 
-    std::vector<WafSignature> signatures = loadWafSignatures("waf_signatues.json");
+    std::vector<WafSignature> signatures = loadWafSignatures("WAF_Signatures.json");
     std::string wafResult = detectWAF(url, signatures);
 
     std::cout << "WAF detection result: " << wafResult << std::endl;
