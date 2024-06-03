@@ -11,8 +11,9 @@
 //Define the WAFSignature Datatype 
 struct WafSignature {
 	std::string name;
-	std::vector<std::string> headers;
-	std::vector<std::string> body;
+	std::string code;
+	std::string page;
+	std::string headers;
 };
 
 

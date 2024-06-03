@@ -9,6 +9,7 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <regex>
 
 //some clean up on namespace callsigns
 namespace beast = boost::beast;
@@ -61,12 +62,14 @@ std::vector<WafSignature> loadWafSignatures(const std::string& filename) {
 	if (file.is_open()) {
 		json data;
 		file >> data;
-		for (const auto& item : data) {
+		for (const auto& item : data.items()) {
 			WafSignature signature;
-			signature.name = item["name"];
-			signature.headers = item["headers"].get<std::vector<std::string>>();
-			signature.body = item["body"].get<std::vector<std::string>>();
+			signature.name = item.key();
+			signature.headers = item.value()["code"];
+			signature.page = item.value()["page"];
+			signature.headers = item.value()["headers"];
 			signatures.push_back(signature);
+
 		}
 		file.close();
 	}
@@ -76,30 +79,33 @@ std::vector<WafSignature> loadWafSignatures(const std::string& filename) {
 std::string detectWAF(const std::string& url, const std::vector<WafSignature>& signatures) {
 	std::string response = makeRequest(url);
 
-	for (const auto& signature : signatures) {
-		bool headerMatch = false;
-		for (const auto& header : signature.headers) {
-			if (response.find(header) != std::string::npos) {
-				headerMatch = true;
-				break;
-			}
-		}
+	for (const auto& signature : signatures){
 
-		bool bodyMatch = false;
-		for (const auto& pattern : signature.body) {
-			if (response.find(pattern) != std::string::npos) {
-				bodyMatch = true;
-				break;
-			}
-		}
 
-		if (headerMatch || bodyMatch) {
+	//check if the response code matches the signature
+		if (!signature.code.empty() && response.find("HTTP/1.1 " + signature.code) != std::string::npos)
+		{
 			return signature.name;
 		}
 
-	}
+	//check if the reponse page matches the signature
+		if (!signature.page.empty() && std::regex_search(response, std::regex(signature.page))) {
+			return signature.name;
+		}
+
+	//check if the response headers match the signature
+		if (!signature.headers.empty() && std::regex_search(response, std::regex(signature.headers))) {
+			return signature.name;
+		}
+
+}
 
 	//Maybe some behavior analysis? I will come back to this
+	std::string xssPayload = "%3Cscript%3Ealert('XSS')%3C/script%3E";
+	std::string xssResponse = makeRequest(url + xssPayload);
+	if (xssResponse.find(xssPayload) != std::string::npos) {
+		return "No WAG detected (Payload reflected";
+	}
 
 
 	return "Unknown";

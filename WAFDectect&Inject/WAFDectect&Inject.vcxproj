@@ -133,6 +133,9 @@
   <ItemGroup>
     <ClInclude Include="waf_detection.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="WAF_Signatures.json" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
